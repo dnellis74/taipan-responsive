@@ -5,13 +5,41 @@ from textual.containers import Container, Vertical
 from textual.screen import Screen
 from textual.widgets import Button, Input, Label, Static
 
-class WelcomeScreen(Screen):
+from taipan.ui.widgets import StatusBar
+
+class BaseGameScreen(Screen):
+    """Base game screen with status bar."""
+    
+    def compose(self) -> ComposeResult:
+        """Create child widgets for the screen."""
+        yield StatusBar()
+        yield Container(
+            Vertical(
+                id="screen-content"
+            )
+        )
+    
+    CSS = """
+    BaseGameScreen {
+        align: center middle;
+    }
+    
+    #screen-content {
+        width: 40;
+        height: auto;
+        border: solid $accent;
+        padding: 1;
+    }
+    """
+
+class WelcomeScreen(BaseGameScreen):
     """Welcome screen with game setup."""
     
     BINDINGS = [("escape", "app.quit", "Quit")]
     
     def compose(self) -> ComposeResult:
         """Create child widgets for the screen."""
+        yield from super().compose()
         yield Container(
             Vertical(
                 Static("Welcome to Taipan!", id="title"),
@@ -32,8 +60,11 @@ class WelcomeScreen(Screen):
             self.query_one("#firm-name").focus()
             return
             
-        app = self.app
-        app.engine.start_game(firm_name, event.button.id)
+        # Get the starting option from the button ID
+        starting_option = event.button.id
+        
+        # Notify the app that welcome is complete with the firm name and starting option
+        self.app.on_welcome_complete(firm_name, starting_option)
         self.app.pop_screen()
     
     CSS = """
@@ -64,11 +95,12 @@ class WelcomeScreen(Screen):
     }
     """
 
-class PortScreen(Screen):
+class PortScreen(BaseGameScreen):
     """Main port interface screen."""
     
     def compose(self) -> ComposeResult:
         """Create child widgets for the screen."""
+        yield from super().compose()
         yield Container(
             Vertical(
                 Static("Port Actions", id="title"),
@@ -98,11 +130,12 @@ class PortScreen(Screen):
     }
     """
 
-class TradeScreen(Screen):
+class TradeScreen(BaseGameScreen):
     """Trading interface screen."""
     
     def compose(self) -> ComposeResult:
         """Create child widgets for the screen."""
+        yield from super().compose()
         yield Container(
             Vertical(
                 Static("Trade", id="title"),

@@ -1,71 +1,64 @@
 """Core game state models for Taipan."""
 
 from dataclasses import dataclass, field
-from enum import Enum, auto
-from typing import Dict, List
+from typing import Dict, List, Optional
+import random
 
-class Port(Enum):
-    """Available ports in the game."""
-    AT_SEA = auto()
-    HONG_KONG = auto()
-    SHANGHAI = auto()
-    NAGASAKI = auto()
-    SAIGON = auto()
-    MANILA = auto()
-    SINGAPORE = auto()
-    BATAVIA = auto()
-
-class Commodity(Enum):
-    """Tradeable commodities."""
-    OPIUM = auto()
-    SILK = auto()
-    ARMS = auto()
-    GENERAL = auto()
-
-@dataclass
-class Ship:
-    """Player's ship status."""
-    capacity: int = 60
-    damage: int = 0
-    guns: int = 0
-    hold: Dict[Commodity, int] = field(default_factory=lambda: {c: 0 for c in Commodity})
-
-@dataclass
-class Player:
-    """Player's status including finances and firm name."""
-    firm_name: str = ""
-    cash: int = 0
-    bank: int = 0
-    debt: int = 0
-    ship: Ship = field(default_factory=Ship)
-
-@dataclass
-class Market:
-    """Market prices and conditions."""
-    prices: Dict[Commodity, Dict[Port, int]] = field(
-        default_factory=lambda: {
-            c: {p: 0 for p in Port} for c in Commodity
-        }
-    )
-    base_prices: Dict[Commodity, Dict[Port, int]] = field(
-        default_factory=lambda: {
-            Commodity.OPIUM: {p: v for p, v in zip(Port, [1000, 11, 16, 15, 14, 12, 10, 13])},
-            Commodity.SILK: {p: v for p, v in zip(Port, [100, 11, 14, 15, 16, 10, 13, 12])},
-            Commodity.ARMS: {p: v for p, v in zip(Port, [10, 12, 16, 10, 11, 13, 14, 15])},
-            Commodity.GENERAL: {p: v for p, v in zip(Port, [1, 10, 11, 12, 13, 14, 15, 16])},
-        }
-    )
+from taipan.models.player import Player
+from taipan.models.port import Port
+from taipan.models.ship import Ship
+from taipan.models.commodity import Commodity
 
 @dataclass
 class GameState:
-    """Overall game state."""
-    player: Player = field(default_factory=Player)
-    market: Market = field(default_factory=Market)
-    current_port: Port = Port.HONG_KONG
+    """Current state of the game."""
+    player: Player
+    ports: List[Port] = field(default_factory=Port.initialize_ports)
+    current_port: Port = field(init=False)
+    ship: Ship = field(default_factory=Ship)
+    day: int = 1
     month: int = 1
     year: int = 1860
     li_yuen_visited: bool = False
     wu_warning: bool = False
     wu_bailout: int = 0
-    enemy_strength: float = 20.0  # Base health of enemies
-    enemy_damage: float = 0.5    # Damage dealt by enemies 
+    enemy_strength: float = 20.0
+    enemy_damage: float = 0.5
+
+    def __post_init__(self):
+        """Initialize the game state."""
+        self.current_port = self.ports[1]  # Start in Hong Kong
+
+    def get_port_by_name(self, name: str) -> Optional[Port]:
+        """Get a port by its name."""
+        for port in self.ports:
+            if port.name == name:
+                return port
+        return None
+
+    def get_port_by_index(self, index: int) -> Optional[Port]:
+        """Get a port by its index."""
+        if 0 <= index < len(self.ports):
+            return self.ports[index]
+        return None
+
+    def get_current_port_index(self) -> int:
+        """Get the index of the current port."""
+        for i, port in enumerate(self.ports):
+            if port.name == self.current_port.name:
+                return i
+        raise ValueError("Current port not found in ports list")
+
+    def set_current_port(self, port: Port) -> None:
+        """Set the current port."""
+        self.current_port = port
+
+    def advance_time(self, days: int) -> None:
+        """Advance the game time by the specified number of days."""
+        self.day += days
+        while self.day > 30:
+            self.day -= 30
+            self.month += 1
+            if self.month > 12:
+                self.month = 1
+                self.year += 1 

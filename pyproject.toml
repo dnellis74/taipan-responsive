@@ -1,0 +1,43 @@
+[tool.poetry]
+name = "taipan-responsive"
+version = "0.1.0"
+description = "A modern, mobile-friendly terminal version of the classic game Taipan!"
+authors = ["Your Name <your.email@example.com>"]
+readme = "README.md"
+packages = [{include = "taipan", from = "src"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+textual = "^0.47.0"
+rich = "^13.0.0"
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.1.0"
+black = "^23.0.0"
+pytest = "^7.0.0"
+pytest-cov = "^4.0.0"
+pre-commit = "^3.0.0"
+mypy = "^1.0.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+line-length = 88
+target-version = "py310"
+select = ["E", "F", "B", "I", "N", "UP", "PL", "RUF"]
+ignore = []
+
+[tool.ruff.isort]
+known-first-party = ["taipan"]
+
+[tool.black]
+line-length = 88
+target-version = ["py310"]
+include = '\.pyi?$'
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+addopts = "-v --cov=taipan --cov-report=term-missing" 

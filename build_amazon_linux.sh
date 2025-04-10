@@ -22,6 +22,11 @@ poetry run pyinstaller \
     --onefile \
     --name taipan \
     --add-data "src/taipan:taipan" \
+    --hidden-import=taipan \
+    --hidden-import=taipan.ui \
+    --hidden-import=taipan.models \
+    --hidden-import=taipan.utils \
+    --paths=src \
     src/taipan/__main__.py
 
 # Create a distribution package

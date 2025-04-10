@@ -1,6 +1,6 @@
 """Main entry point for Taipan."""
 
-from .ui.app import TaipanApp
+from taipan.ui.app import TaipanApp
 
 def main():
     """Run the Taipan game."""

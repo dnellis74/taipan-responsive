@@ -5,10 +5,10 @@ set -e
 
 # Install required system packages
 sudo yum update -y
-sudo yum install -y python3.10 python3.10-devel gcc make
+sudo yum install -y python3.9 python3.9-devel gcc make
 
 # Create and activate virtual environment
-python3.10 -m venv .venv
+python3.9 -m venv .venv
 source .venv/bin/activate
 
 # Install Poetry

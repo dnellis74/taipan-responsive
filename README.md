@@ -4,14 +4,14 @@ A modern, mobile-friendly terminal version of the classic game Taipan!
 
 ## Development Setup
 
-1. Install Python 3.10 or later (recommended: use [pyenv](https://github.com/pyenv/pyenv))
+1. Install Python 3.9.20 (recommended: use [pyenv](https://github.com/pyenv/pyenv))
    ```bash
    # Install pyenv
    curl https://pyenv.run | bash
    
-   # Install Python 3.10
-   pyenv install 3.10.0
-   pyenv global 3.10.0
+   # Install Python 3.9.20
+   pyenv install 3.9.20
+   pyenv global 3.9.20
    ```
 
 2. Install [Poetry](https://python-poetry.org/docs/#installation)
@@ -42,6 +42,7 @@ A modern, mobile-friendly terminal version of the classic game Taipan!
 - Amazon Linux 2023 instance
 - sudo access
 - Internet connection
+- Python 3.9.20
 
 ### Building the Executable
 
@@ -58,7 +59,7 @@ A modern, mobile-friendly terminal version of the classic game Taipan!
 
 3. The build process will:
    - Install required system packages
-   - Set up a Python virtual environment
+   - Set up a Python 3.9.20 virtual environment
    - Install Poetry and project dependencies
    - Build a standalone executable
    - Create a distribution package

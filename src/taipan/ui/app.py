@@ -8,6 +8,7 @@ from textual.reactive import reactive
 from ..models.game_engine import GameEngine
 from ..models.game_state import Port, Commodity
 from .screens import WelcomeScreen, PortScreen, TradeScreen
+from .splash import ShipSplash, CreditsSplash
 
 class StatusBar(Static):
     """Status bar showing player's current status."""
@@ -71,6 +72,8 @@ class TaipanApp(App):
     """
     
     SCREENS = {
+        "ship": ShipSplash(),
+        "credits": CreditsSplash(),
         "welcome": WelcomeScreen(),
         "port": PortScreen(),
         "trade": TradeScreen(),
@@ -89,8 +92,8 @@ class TaipanApp(App):
     
     def on_mount(self) -> None:
         """Handle app start-up."""
-        # Start new game setup
-        self.push_screen("welcome")
+        # Start with the ship splash screen
+        self.push_screen("ship")
     
     def update_status(self) -> None:
         """Update the status bar with current game state."""

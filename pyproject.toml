@@ -18,6 +18,7 @@ pytest = "^7.0.0"
 pytest-cov = "^4.0.0"
 pre-commit = "^3.0.0"
 mypy = "^1.0.0"
+pyinstaller = "^6.3.0"
 
 [build-system]
 requires = ["poetry-core"]
@@ -40,4 +41,10 @@ include = '\.pyi?$'
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 python_files = ["test_*.py"]
-addopts = "-v --cov=taipan --cov-report=term-missing" 
+addopts = "-v --cov=taipan --cov-report=term-missing"
+
+[tool.pyinstaller]
+console = true
+onefile = true
+name = "taipan"
+entry-point = "taipan.__main__:main" 
